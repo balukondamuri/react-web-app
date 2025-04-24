@@ -1,31 +1,30 @@
-name: Deploy React App
+name: Deploy
 
-on: 
-    push:
-        branches: [main]
-    pull_request:
+on:
+    workflow_run:
+        workflows: ["Build", "Test"]
+        types: [completed]
         branches: [main]
 
 jobs:
-    build-and-deploy:
+    deploy-to-aws:
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
-            - name: setup Node.js
-              uses: actions/setup-node@v3
+            
+            - name: Download build artifact
+              uses: dawidd6/action-download-artifact@v2
               with:
-                node-version: '18'
-                cache: 'npm'
-
-            - name: Install dependencies 
-              run: npm ci
+                workflow: build.yml
+                workflow_conclusion: success
+                name: build-files
+                path: build/
 
             - name: Deploy to S3
-              if: github.ref == 'refs/heads/main'
               uses: jakejarvis/s3-sync-action@master
               with:
                 args: --delete
-
               env:
                 AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
                 AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -33,7 +32,6 @@ jobs:
                 SOURCE_DIR: "build"
             
             - name: Invalidate CloudFront
-              if: github.ref == 'refs/heads/main'
               uses: chetan/invalidate-cloudfront-action@v2
               env:
                   DISTRIBUTION: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}

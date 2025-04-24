@@ -28,5 +28,5 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                 name: build-files
-                path: build/ # or dist/
+                path: build/
                 retention-days: 1

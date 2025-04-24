@@ -18,7 +18,7 @@ function App(): JSX.Element {
   const handleLogin = ():void =>{
     setUser({
       id: '123',
-      name: 'Balu K',
+      name: 'GuestUser',
       email: 'balukondamuri@gmail.com'
     });
   };

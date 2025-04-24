@@ -13,7 +13,7 @@ const Header: React.FC<HeaderProps> = ({user, onLogout})=>{
             <h1> My Application </h1>
             {user && (
                 <div>
-                    <span>Welcome, {user.name}</span>
+                    <span>Welcome, {user.name}  </span>
                     <button onClick={onLogout}>Logout</button>
                 </div>
             )}

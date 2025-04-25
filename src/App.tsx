@@ -31,7 +31,7 @@ function App(): JSX.Element {
         {!user ? (
           <div>
             <p>Welcome to my application!</p>
-            <button onClick={handleLogin}>Login</button>
+            <button onClick={handleLogin} data-testid="login-button">Login</button>
             </div>
         ):(
           <p> Welcome back, {user.name}! Your account ID is {user.id}.</p>
